@@ -1,0 +1,125 @@
+main {
+    display: grid;
+    grid-template-columns: 1fr 1 fr;
+    grid-template-areas: "chat alerts";
+}
+
+ion-toolbar {
+    color: white;
+    background-color: blueviolet;
+}
+
+section.chat {
+    grid-area: chat;
+}
+
+section.alerts {
+    grid-area: alerts;
+}
+
+.tab-row {
+    padding-top: 20px;
+}
+
+.tab-btn.active {
+    background: blue;
+    color: white;
+}
+
+.message {
+    padding: 10px !important;
+    transition: all 250ms ease-in-out !important;
+    border-radius: 10px !important;
+    margin-bottom: 4px !important;
+}
+.my_message {
+    background-color: lightgreen !important;
+    color: #ffffff !important;
+}
+.my_message .user_name, .my_message .time {
+    color: #1e2023;
+}
+.other_message {
+    background-color: lightgrey !important;
+    color: #ffffff !important;
+}
+.other_message .user_name, .other_message .time {
+    color: #f5f6f9;
+}
+.time {
+    float: right;
+    font-size: small;
+}
+.message_row {
+    background-color: #fff;
+}
+
+mat-toolbar {
+    background: #004a9f;
+    color: white;
+}
+mat-sidenav {
+    margin: 16px;
+    width: 200px;
+    border-right: none;
+    background: #002b5c;
+    color: white;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+.content {
+    height: calc(100vh - 98px);
+    border-radius: 10px;
+    margin: 16px;
+    margin-left: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: lightgray;
+}
+mat-sidenav-container {
+    height: calc(100vh - 65px);
+}
+
+a {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1rem;
+    color: white;
+}
+
+.menu-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1rem;
+}
+.menu-button mat-icon {
+    margin-right: 8px;
+}
+.avatar {
+    margin-top: 16px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+.name {
+    margin-top: 8px;
+    font-weight: normal;
+}
+.designation {
+    margin-top: 2px;
+    font-size: 0.7rem;
+    color: lightgrey;
+}
+mat-divider {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+

@@ -1,0 +1,134 @@
+<!-- <mat-toolbar class="mat-elevation-z8">
+    <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()">
+        <mat-icon *ngIf="!sidenav.opened">
+            menu
+        </mat-icon>
+        <mat-icon *ngIf="sidenav.opened">
+            close
+        </mat-icon>
+    </button>
+    Transcendance Chat
+</mat-toolbar>
+
+<mat-sidenav-container>
+    <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+        <button mat-icon-button class="menu-button">
+            <mat-icon>home</mat-icon>
+            <span>Home</span>
+        </button>
+
+        <button mat-icon-button class="menu-button">
+            <mat-icon>favorite</mat-icon>
+            <span>Friends</span>
+        </button>
+        
+        <button mat-icon-button class="menu-button" (click)="sidenav1.toggle()">
+            <mat-icon>groups</mat-icon>
+            <span>Group Chat</span>
+        </button>
+
+        <img class="avatar mat-elevation-z8" src="https://cdn.intra.42.fr/users/dalba-de.jpg" />
+
+        <h4 class="name">{{username}}</h4>
+
+        <mat-divider></mat-divider>
+
+        <button mat-button class="menu-button">
+            <mat-icon>help</mat-icon>
+            <span>Help</span>
+        </button>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="content mat-elevation-z8">
+
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container> -->
+
+<ion-app>
+    <ion-header>
+        <ion-toolbar color="tertiary">
+          <ion-buttons slot="start">
+            <ion-back-button defaultHref="/"></ion-back-button>
+          </ion-buttons>
+          <ion-title>
+            Chat
+          </ion-title>
+        </ion-toolbar>
+    </ion-header>
+      <ion-card>
+          <ion-card-content>
+            There are currently <strong>{{users}}</strong> users online. Start
+            chatting!
+          </ion-card-content>
+      </ion-card>
+
+      <mat-sidenav-container>
+        <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+            <button mat-icon-button class="menu-button">
+                <mat-icon>home</mat-icon>
+                <span>Home</span>
+            </button>
+    
+            <button mat-icon-button class="menu-button">
+                <mat-icon>favorite</mat-icon>
+                <span>Friends</span>
+            </button>
+            
+            <button mat-icon-button class="menu-button" (click)="sidenav1.toggle()">
+                <mat-icon>groups</mat-icon>
+                <span>Group Chat</span>
+            </button>
+    
+            <img class="avatar mat-elevation-z8" src="https://cdn.intra.42.fr/users/dalba-de.jpg" />
+    
+            <h4 class="name">{{username}}</h4>
+    
+            <mat-divider></mat-divider>
+    
+            <button mat-button class="menu-button">
+                <mat-icon>help</mat-icon>
+                <span>Help</span>
+            </button>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <ion-grid>
+                <ion-row *ngFor="let message of messages['general']">
+                  <ion-col size="9" *ngIf="message.from !== username" class="message"
+                          [ngClass]="{'my_message': message.from === username, 'other_message': message.from !== username}">
+                    <span class="user_name">{{ message.from }}:</span><br>
+                    <span>{{ message.text }}</span>
+                    <div class="time">{{message.created | date:'dd.MM HH:mm'}}</div>
+                  </ion-col>
+            
+                  <ion-col offset="3" size="9" *ngIf="message.from === username" class="message"
+                          [ngClass]="{'my_message': message.from === username, 'other_message': message.from !== username}">
+                    <span class="user_name">{{ message.from }}:</span><br>
+                    <span>{{ message.text }}</span>
+                    <div class="time">{{message.created | date:'dd.MM HH:mm'}}</div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+        
+    
+
+      <ion-footer>
+        <ion-toolbar>
+          <ion-row class="message_row">
+            <ion-col size="9">
+              <ion-item no-lines>
+                <ion-input type="text" placeholder="Message" [(ngModel)]="text"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="3">
+              <ion-button clear color="primary" (click)="sendChatMessage()" [disabled]="text === ''">
+                <ion-icon name="chatbox-ellipses-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-toolbar>
+      </ion-footer>
+</ion-app>
+
