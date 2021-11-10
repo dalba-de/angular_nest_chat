@@ -80,3 +80,31 @@ section .mat-list .mat-list-avatar{
 .full-width .mat-icon {
     cursor: pointer;
 }
+
+.message {
+    padding: 10px !important;
+    transition: all 250ms ease-in-out !important;
+    border-radius: 10px !important;
+    margin-bottom: 4px !important;
+}
+.my_message {
+    background-color: lightgreen !important;
+    color: #ffffff !important;
+}
+.my_message .user_name, .my_message .time {
+    color: #1e2023;
+}
+.other_message {
+    background-color: lightgrey !important;
+    color: #ffffff !important;
+}
+.other_message .user_name, .other_message .time {
+    color: #f5f6f9;
+}
+.time {
+    float: right;
+    font-size: small;
+}
+.message_row {
+    background-color: #fff;
+}

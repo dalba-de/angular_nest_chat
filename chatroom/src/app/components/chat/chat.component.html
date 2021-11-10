@@ -27,9 +27,38 @@
     </mat-sidenav>
     <section class="empty-conversation" *ngIf="!activeRoom">
       <h1 class="mat-display-1">Select a conversation from the left to start chatting</h1>
-    </section>
-    <section>
+    </section>  
+    <section *ngIf="activeRoom">
+      <div class="mat-typography conversation-header">
+        <h2>
+            <mat-icon>forum</mat-icon>
+              {{activeRoom.name}}
+        </h2>
+        <p>
+            <mat-icon>account_circle</mat-icon>
+            {{(activeRoom.users).length}} Members
+        </p>
+      </div>
       <mat-divider></mat-divider>
+      <mat-list dense class="conversation-history mat-typography">
+        <ion-grid>
+            <ion-row *ngFor="let message of messages['general']">
+              <ion-col size="9" *ngIf="message.from !== username" class="message"
+                      [ngClass]="{'my_message': message.from === username, 'other_message': message.from !== username}">
+                <span class="user_name">{{ message.from }}:</span><br>
+                <span>{{ message.text }}</span>
+                <div class="time">{{message.created | date:'dd.MM HH:mm'}}</div>
+              </ion-col>
+        
+              <ion-col offset="3" size="9" *ngIf="message.from === username" class="message"
+                      [ngClass]="{'my_message': message.from === username, 'other_message': message.from !== username}">
+                <span class="user_name">{{ message.from }}:</span><br>
+                <span>{{ message.text }}</span>
+                <div class="time">{{message.created | date:'dd.MM HH:mm'}}</div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </mat-list>
       <div class="conversation-input">
         <mat-divider></mat-divider>
         <mat-form-field class="full-width">

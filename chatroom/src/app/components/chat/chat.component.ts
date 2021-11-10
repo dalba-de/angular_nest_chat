@@ -24,23 +24,13 @@ export class ChatComponent implements OnInit {
   constructor(private socket: Socket, private observer: BreakpointObserver) { }
 
   ngOnInit(): void {
-    // this.rooms = new Rooms();
     this.username = prompt('username: ')!;
 
     this.socket.on('connect', () => {
       this.socket.emit('set-user', this.username);
-      // this.rooms.push('general');
-      // this.rooms.set('general', true);
-      // console.log(this.rooms);
-      // this.rooms.name.set('general', true);
-    //   let generalRoom = new Rooms('general');
-    //   generalRoom.isActive = true;
-    //   this.rooms.push(generalRoom)
-    //   console.log(this.rooms);
       this.socket.emit('joinRoom', { room: 'general', username: this.username });
       let value: string[] = [];
       Object.assign(this.messages, {general: value}); //Esta linea vale para añadir propiedades a un objeto
-      console.log(this.messages);
     });
 
     this.socket.on('chatToClient', (msg) => {
@@ -48,12 +38,21 @@ export class ChatComponent implements OnInit {
     });
 
     this.socket.on('joinedRoom', (room) => {
-      // this.rooms[room] = true;
-      // console.log(this.rooms);
-      // this.rooms.name[room] = true;
-      // this.rooms.users.push(this.username);
-      this.rooms[this.selectedRoom].isActive = true;
-      this.rooms[this.selectedRoom].users.push(this.username);
+        console.log("room name: " + room.room);
+        for (let i = 0; i < this.rooms.length; i++) {
+            if (this.rooms[i].name === room.room) {
+                this.rooms[i].users = room.users;
+                console.log(this.rooms);
+                return ;
+            }
+        }
+        let newRoom: Rooms = {
+            name: room.room,
+            users: room.users,
+            isActive: true
+        };
+        this.rooms.push(newRoom);
+        console.log(this.rooms);
     });
 
     this.socket.on('leftRoom', (room) => {
@@ -71,7 +70,7 @@ export class ChatComponent implements OnInit {
   sendChatMessage() {
     // Check if user is member of active room
     if (this.isMemberOfActiveRoom) {
-        this.socket.emit('chatToServer', { sender: this.username, room: this.activeRoom, message: this.text });
+        this.socket.emit('chatToServer', { sender: this.username, room: this.activeRoom.name, message: this.text });
         this.text = "";
     }
     else {
@@ -89,7 +88,7 @@ export class ChatComponent implements OnInit {
       if (this.rooms[i].name === roomName) {
         this.selectedRoom = i;
         this.activeRoom = this.rooms[i];
-        console.log(this.activeRoom);
+        console.log(this.activeRoom.name);
         console.log("number: " + this.selectedRoom);
         return ;
       }
@@ -97,8 +96,6 @@ export class ChatComponent implements OnInit {
   }
 
   get isMemberOfActiveRoom() {
-    // return this.rooms[this.activeRoom];
-    // return this.rooms.name[this.activeRoom];
     console.log("active?: " + this.rooms[this.selectedRoom].isActive)
     return this.rooms[this.selectedRoom].isActive;
   }

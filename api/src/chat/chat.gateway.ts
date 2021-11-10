@@ -13,6 +13,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
 
   handleDisconnect(client: Socket) {
     // this.wss.emit('users-changed', { user: this.nicknames[client.id], event: 'left' });
+    let nickname: string = this.nicknames.get(client.id);
+    // seguir aqui borrando al usuario de cada sala.
     this.nicknames.delete(client.id);
     this.wss.emit('users', this.nicknames.size);
   }
@@ -30,6 +32,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
 
   @SubscribeMessage('chatToServer')
   handleMessage(client: Socket, message: { sender: string, room: string, message: string }) {
+      console.log("sender: " + message.sender + " room: " + message.room);
     this.wss.to(message.room).emit('chatToClient', {text: message.message, from: this.nicknames.get(client.id), created: new Date()});
   }
 
@@ -48,7 +51,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
         console.log(this.rooms);
     }
     client.join(data.room);
-    client.emit('joinedRoom', { room: data.room, users: users });
+    //client.emit('joinedRoom', { room: data.room, users: users });
+    this.wss.emit('joinedRoom', { room: data.room, users: users });
   }
 
   // AÑADIR LOGICA CUANDO SE VA UN USUARIO (BORRAR DEL MAPA)
