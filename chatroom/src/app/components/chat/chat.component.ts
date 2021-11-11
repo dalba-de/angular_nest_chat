@@ -19,6 +19,7 @@ export class ChatComponent implements OnInit {
   rooms : Rooms[] = []
   activeRoom: Rooms;
   selectedRoom : number = 0;
+  eventRoom: string = '';
 
   constructor(private socket: Socket, private observer: BreakpointObserver) { }
 
@@ -36,6 +37,8 @@ export class ChatComponent implements OnInit {
     });
 
     this.socket.on('chatToClient', (msg) => {
+      if (msg.from !== this.username && msg.room !== this.activeRoom.name)
+        this.eventRoom = msg.room;
       this.receiveChatMessage(msg);
     });
 
@@ -53,6 +56,11 @@ export class ChatComponent implements OnInit {
             isActive: true
         };
         this.rooms.push(newRoom);
+        if (!this.activeRoom) {
+          this.activeRoom = newRoom;
+          console.log("activeRoom: " + this.activeRoom.name)
+        }
+          
         console.log(this.rooms);
     });
 
@@ -102,6 +110,12 @@ export class ChatComponent implements OnInit {
         return ;
       }
     }
+  }
+
+  isEvent(roomName: string) {
+    if (roomName === this.eventRoom)
+      return('event');
+    return('no_event');
   }
 
   get isMemberOfActiveRoom() {

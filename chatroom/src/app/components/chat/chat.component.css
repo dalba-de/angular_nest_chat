@@ -47,6 +47,14 @@
 .conversations .mat-list-item {
     cursor: pointer;
 }
+
+.conversations .no_event {
+    color: black;
+}
+
+.conversations .event {
+    color: red;
+}
  
 .mat-card {
     height: 100%;

@@ -7,7 +7,7 @@
               <mat-icon matListIcon>forum</mat-icon>
             </ng-template>
             <mat-list class="conversations">
-                <mat-list-item *ngFor="let recipient of rooms" (click)="selectedConversation(recipient.name)">
+                <mat-list-item *ngFor="let recipient of rooms" (click)="selectedConversation(recipient.name)" [ngClass]="isEvent(recipient.name)">
                     <mat-icon matListIcon>forum</mat-icon>
                     <p>{{recipient.name}}</p>
                 </mat-list-item>
