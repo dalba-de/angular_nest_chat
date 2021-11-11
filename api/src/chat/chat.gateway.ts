@@ -12,11 +12,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
   private logger: Logger = new Logger('ChatGateway');
 
   handleDisconnect(client: Socket) {
-    // this.wss.emit('users-changed', { user: this.nicknames[client.id], event: 'left' });
     let nickname: string = this.nicknames.get(client.id);
-    // seguir aqui borrando al usuario de cada sala.
+    for (const [key, value] of this.rooms.entries()) {
+        const index = value.indexOf(nickname, 0);
+        if (index > -1) {
+            value.splice(index, 1);
+        }
+    }
+    console.log(this.rooms);
     this.nicknames.delete(client.id);
-    this.wss.emit('users', this.nicknames.size);
+    // this.wss.emit('users', this.nicknames.size);
+    this.wss.emit('leftRoom', {nickname: nickname});
   }
 
   afterInit(server: any) {
@@ -32,8 +38,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
 
   @SubscribeMessage('chatToServer')
   handleMessage(client: Socket, message: { sender: string, room: string, message: string }) {
-      console.log("sender: " + message.sender + " room: " + message.room);
-    this.wss.to(message.room).emit('chatToClient', {text: message.message, from: this.nicknames.get(client.id), created: new Date()});
+    //REVISAR ESTA LINEA, HABRA QUE MANDAR EL ROOM DENTRO DE LOS DATOS
+    //this.wss.to(message.room).emit('chatToClient', {text: message.message, from: this.nicknames.get(client.id), created: new Date()});
+    this.wss.emit('chatToClient', {text: message.message, room: message.room, from: this.nicknames.get(client.id), created: new Date()});
   }
 
   @SubscribeMessage('joinRoom')
@@ -51,7 +58,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
         console.log(this.rooms);
     }
     client.join(data.room);
-    //client.emit('joinedRoom', { room: data.room, users: users });
     this.wss.emit('joinedRoom', { room: data.room, users: users });
   }
 

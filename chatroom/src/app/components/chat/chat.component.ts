@@ -13,7 +13,6 @@ import { Rooms } from "../../rooms";
 export class ChatComponent implements OnInit {
 
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
-  users: number = 0;
   username: string = '';
   text: string = '';
   messages: any = {}
@@ -28,9 +27,12 @@ export class ChatComponent implements OnInit {
 
     this.socket.on('connect', () => {
       this.socket.emit('set-user', this.username);
-      this.socket.emit('joinRoom', { room: 'general', username: this.username });
+      this.socket.emit('joinRoom', { room: 'General', username: this.username });
+      this.socket.emit('joinRoom', { room: 'Spain', username: this.username });
       let value: string[] = [];
-      Object.assign(this.messages, {general: value}); //Esta linea vale para añadir propiedades a un objeto
+      let spain: string[] = [];
+      Object.assign(this.messages, {General: value}); //Esta linea vale para añadir propiedades a un objeto
+      Object.assign(this.messages, {Spain: spain});
     });
 
     this.socket.on('chatToClient', (msg) => {
@@ -38,7 +40,6 @@ export class ChatComponent implements OnInit {
     });
 
     this.socket.on('joinedRoom', (room) => {
-        console.log("room name: " + room.room);
         for (let i = 0; i < this.rooms.length; i++) {
             if (this.rooms[i].name === room.room) {
                 this.rooms[i].users = room.users;
@@ -56,15 +57,21 @@ export class ChatComponent implements OnInit {
     });
 
     this.socket.on('leftRoom', (room) => {
-        // this.rooms[room] = false;
-        // console.log(this.rooms);
-        // this.rooms.name[room] = false;
-        this.rooms[this.selectedRoom].isActive = false;
+        for (let i = 0; i < this.rooms.length; i++) {
+            let index = this.rooms[i].users.indexOf(room.nickname);
+            if (index > -1) {
+                this.rooms[i].users.splice(index, 1);
+            }
+        }
+        console.log(this.rooms);
     });
 
-    this.socket.on('users', (data) => {
-      this.users = data;
-    });
+    // this.socket.on('leftRoom', (room) => {
+    //     // this.rooms[room] = false;
+    //     // console.log(this.rooms);
+    //     // this.rooms.name[room] = false;
+    //     this.rooms[this.selectedRoom].isActive = false;
+    // });
   }
 
   sendChatMessage() {
@@ -79,8 +86,10 @@ export class ChatComponent implements OnInit {
   }
   
   receiveChatMessage(msg) {
-    this.messages.general.push(msg);
-    console.log(this.messages['general'])
+    //REVISAR AQUI, HAY QUE METER CADA MENSAJE EN EL GRUPO CORRESPONDIENTE
+    const arr = msg.room;
+    this.messages[arr].push(msg);
+    console.log(this.messages)
   }
 
   selectedConversation(roomName: string) {

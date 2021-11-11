@@ -42,7 +42,7 @@
       <mat-divider></mat-divider>
       <mat-list dense class="conversation-history mat-typography">
         <ion-grid>
-            <ion-row *ngFor="let message of messages['general']">
+            <ion-row *ngFor="let message of messages[activeRoom.name]">
               <ion-col size="9" *ngIf="message.from !== username" class="message"
                       [ngClass]="{'my_message': message.from === username, 'other_message': message.from !== username}">
                 <span class="user_name">{{ message.from }}:</span><br>
