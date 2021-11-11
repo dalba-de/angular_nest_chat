@@ -55,6 +55,10 @@
 .conversations .event {
     color: red;
 }
+
+.conversations .no_in_group {
+    color: grey;
+}
  
 .mat-card {
     height: 100%;

@@ -15,6 +15,7 @@ export class ChatComponent implements OnInit {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
   username: string = '';
   text: string = '';
+  newGroup: string = '';
   messages: any = {}
   rooms : Rooms[] = []
   activeRoom: Rooms;
@@ -50,17 +51,18 @@ export class ChatComponent implements OnInit {
                 return ;
             }
         }
+        let bool: boolean = false;
+        if (room.users.indexOf(this.username) > -1)
+            bool = true;        
         let newRoom: Rooms = {
             name: room.room,
             users: room.users,
-            isActive: true
+            isActive: bool
         };
         this.rooms.push(newRoom);
         if (!this.activeRoom) {
           this.activeRoom = newRoom;
-          console.log("activeRoom: " + this.activeRoom.name)
         }
-          
         console.log(this.rooms);
     });
 
@@ -74,13 +76,6 @@ export class ChatComponent implements OnInit {
         }
         console.log(this.rooms);
     });
-
-    // this.socket.on('leftRoom', (room) => {
-    //     // this.rooms[room] = false;
-    //     // console.log(this.rooms);
-    //     // this.rooms.name[room] = false;
-    //     this.rooms[this.selectedRoom].isActive = false;
-    // });
   }
 
   sendChatMessage() {
@@ -106,6 +101,13 @@ export class ChatComponent implements OnInit {
       if (this.rooms[i].name === roomName) {
         this.selectedRoom = i;
         this.activeRoom = this.rooms[i];
+        if (this.rooms[i].isActive === false)
+            if(confirm(this.username + " do you want to enter the group?")) {
+                console.log("Has dado al si?")
+            }
+            else {
+                console.log("has dado al no?")
+            }
         console.log(this.activeRoom.name);
         console.log("number: " + this.selectedRoom);
         return ;
@@ -114,9 +116,25 @@ export class ChatComponent implements OnInit {
   }
 
   isEvent(roomName: string) {
+    let bool: boolean = true;
+    for (let i = 0; i < this.rooms.length; i++) {
+        if (this.rooms[i].name === roomName) {
+            bool = this.rooms[i].isActive;
+        }
+    }
     if (roomName === this.eventRoom)
       return('event');
+    else if (bool === false)
+        return('no_in_group')
     return('no_event');
+  }
+
+  createNewGroup() {
+      this.socket.emit('joinRoom', { room: this.newGroup, username: this.username });
+      let value: string[] = [];      
+      Object.assign(this.messages, {[this.newGroup]: value});
+      this.newGroup = '';
+      console.log(this.messages);
   }
 
   get isMemberOfActiveRoom() {

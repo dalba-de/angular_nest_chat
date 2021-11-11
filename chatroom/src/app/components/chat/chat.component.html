@@ -18,6 +18,17 @@
     </mat-sidenav>
     <mat-sidenav position="end" mode="side" opened *ngIf="activeRoom">
       <mat-card>
+        <mat-tab-group>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <input mat-input type="text" (keydown.space)="$event.preventDefault()" size="7" [(ngModel)]="newGroup">
+                    <button mat-icon-button matTooltip="Create a new group" (click)="createNewGroup()" [disabled]="newGroup === ''">
+                        <mat-icon>person_add</mat-icon>
+                    </button>
+                </ng-template>  
+            </mat-tab>
+        </mat-tab-group>
+        
         <mat-list class="members">
             <mat-list-item *ngFor="let user of rooms[selectedRoom].users">
               <p>{{user}}</p>
