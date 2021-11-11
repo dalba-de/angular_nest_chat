@@ -56,6 +56,7 @@ export class ChatComponent implements OnInit {
         console.log(this.rooms);
     });
 
+    // Borra los usuarios cuando se abandona el chat
     this.socket.on('leftRoom', (room) => {
         for (let i = 0; i < this.rooms.length; i++) {
             let index = this.rooms[i].users.indexOf(room.nickname);
