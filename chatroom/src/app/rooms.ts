@@ -4,6 +4,7 @@ export class Rooms {
     users : string[] = [];
     isActive: boolean;
     notification: boolean;
+    isGroup: boolean;
 
     public constructor(roomName: string) {
         this.name = roomName;

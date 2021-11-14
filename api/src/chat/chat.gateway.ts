@@ -28,6 +28,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     }
     // this.wss.emit('users', this.nicknames.size);
     this.wss.emit('leftRoom', {nickname: nickname});
+    this.wss.emit('closeChat', {username: nickname});
   }
 
   afterInit(server: any) {

@@ -77,6 +77,7 @@ export class ChatComponent implements OnInit {
             users: room.users,
             isActive: bool,
             notification: false,
+            isGroup: true
         };
         this.rooms.push(newRoom);
         if (!this.activeRoom) {
@@ -90,7 +91,8 @@ export class ChatComponent implements OnInit {
         name: room.room,
         users: room.users,
         isActive: true,
-        notification: false
+        notification: false,
+        isGroup: false
       };
       let value: string[] = [];      
       Object.assign(this.messages, {[room.room]: value});
@@ -109,6 +111,13 @@ export class ChatComponent implements OnInit {
             }
         }
         console.log(this.rooms);
+    });
+
+    this.socket.on('closeChat', (data) => {
+      const index = this.users.indexOf(data.username, 0);
+      if (index > -1) {
+        this.users.splice(index, 1);
+      }
     });
   }
 
@@ -170,7 +179,8 @@ export class ChatComponent implements OnInit {
   }
 
   userToUser(user: string) {
-    this.socket.emit('userToUser', { myUser: this.username, username: user });
+    if (confirm("Do you want to start a chat with " + user +"?"))
+      this.socket.emit('userToUser', { myUser: this.username, username: user });
   }
 
   playAudio() {

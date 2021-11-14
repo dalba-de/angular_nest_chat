@@ -10,7 +10,8 @@
             </ng-template>
             <mat-list class="conversations">
                 <mat-list-item *ngFor="let recipient of rooms" (click)="selectedConversation(recipient.name)" [ngClass]="isEvent(recipient.name)">
-                    <mat-icon matListIcon>forum</mat-icon>
+                    <mat-icon matListIcon style="font-size: 15px;" *ngIf="recipient.isGroup">public</mat-icon>
+                    <mat-icon matListIcon style="font-size: 15px;" *ngIf="!recipient.isGroup">whatsapp</mat-icon>
                     <mat-icon class="icon_display" *ngIf="recipient.notification">notifications</mat-icon>
                     <p>{{recipient.name}}</p>
                 </mat-list-item>
@@ -23,7 +24,7 @@
             </ng-template>
             <mat-list class="conversations">
               <mat-list-item *ngFor="let user of users" (click)="userToUser(user)">
-                  <mat-icon matListIcon>person</mat-icon>
+                  <mat-icon matListIcon style="font-size: 15px;">person</mat-icon>
                   <p>{{user}}</p>
               </mat-list-item>
             </mat-list>
