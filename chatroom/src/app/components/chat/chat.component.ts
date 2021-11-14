@@ -57,10 +57,10 @@ export class ChatComponent implements OnInit {
 
     this.socket.on('users', (newUser) => {
       for (let i = 0; i < newUser.nicknames.length; i++) {
-        console.log(newUser.nicknames[i])
-        if (newUser.nicknames[i] !== this.username)
+        if (newUser.nicknames[i] !== this.username && (this.users.indexOf(newUser.nicknames[i]) === -1))
           this.users.push(newUser.nicknames[i])
       }
+      console.log(this.users)
     })
 
     this.socket.on('joinedRoom', (room) => {
