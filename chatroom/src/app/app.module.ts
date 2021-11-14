@@ -30,6 +30,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { ChildComponent } from './components/child/child.component';
 
@@ -78,7 +79,8 @@ const routes: Routes = [
     MatListModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSlideToggleModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent]

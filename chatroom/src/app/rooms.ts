@@ -5,6 +5,8 @@ export class Rooms {
     isActive: boolean;
     notification: boolean;
     isGroup: boolean;
+    isPrivate: boolean;
+    password: string | undefined;
 
     public constructor(roomName: string) {
         this.name = roomName;

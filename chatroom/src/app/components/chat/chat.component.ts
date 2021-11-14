@@ -2,8 +2,8 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } 
 import { Socket } from 'ngx-socket-io';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatTabGroup } from '@angular/material/tabs'
-import { BreakpointObserver } from "@angular/cdk/layout";
 import { Rooms } from "../../rooms";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -24,15 +24,18 @@ export class ChatComponent implements OnInit {
   selectedRoom : number = 0;
   users: string[] = [];
   notification: boolean = false;
+  privateGroup: boolean = false;
+  password: string = '';
+  showPass: boolean = false;
 
-  constructor(private socket: Socket, private observer: BreakpointObserver) { }
+  constructor(private socket: Socket, private router: Router) { }
 
   ngOnInit(): void {
     this.username = prompt('username: ')!;
 
     this.socket.on('connect', () => {
       this.socket.emit('set-user', this.username);
-      this.socket.emit('joinRoom', { room: 'General', username: this.username });
+      this.socket.emit('joinRoom', { room: 'General', username: this.username, password: this.password });
       let value: string[] = [];
       Object.assign(this.messages, {General: value}); //Esta linea vale para añadir propiedades a un objeto
     });
@@ -70,15 +73,22 @@ export class ChatComponent implements OnInit {
             }
         }
         let bool: boolean = false;
+        let passBool: boolean = false;
         if (room.users.indexOf(this.username) > -1)
-            bool = true;        
+            bool = true;
+        if (room.password !== '')
+            passBool = true;
         let newRoom: Rooms = {
             name: room.room,
             users: room.users,
             isActive: bool,
             notification: false,
-            isGroup: true
+            isGroup: true,
+            isPrivate: passBool,
+            password: room.password
         };
+        this.password = '';
+        this.privateGroup = false;
         this.rooms.push(newRoom);
         if (!this.activeRoom) {
           this.activeRoom = newRoom;
@@ -92,7 +102,9 @@ export class ChatComponent implements OnInit {
         users: room.users,
         isActive: true,
         notification: false,
-        isGroup: false
+        isGroup: false,
+        isPrivate: false,
+        password: ''
       };
       console.log(room.room)
       let value: string[] = [];      
@@ -149,9 +161,24 @@ export class ChatComponent implements OnInit {
         this.rooms[i].notification = false;
         if (this.rooms[i].isActive === false) {
           if(confirm(this.username + " do you want to enter the group?")) {
-            this.socket.emit('joinRoom', { room: roomName, username: this.username });
-            let value: string[] = [];      
-            Object.assign(this.messages, {[roomName]: value});
+            if (this.activeRoom.isPrivate) {
+              console.log(this.activeRoom.password)
+              let pass = prompt('enter the password: ')!;
+              if (pass === this.activeRoom.password) {
+                this.socket.emit('joinRoom', { room: roomName, username: this.username, password: this.password });
+                let value: string[] = [];      
+                Object.assign(this.messages, {[roomName]: value});
+              }
+              else {
+                window.alert('Incorrect Password!');
+              }
+            }
+            else {
+              this.socket.emit('joinRoom', { room: roomName, username: this.username, password: this.password });
+              let value: string[] = [];      
+              Object.assign(this.messages, {[roomName]: value});
+            }
+            
           }
         }
         return ;
@@ -172,7 +199,7 @@ export class ChatComponent implements OnInit {
   }
 
   createNewGroup() {
-      this.socket.emit('joinRoom', { room: this.newGroup, username: this.username });
+      this.socket.emit('joinRoom', { room: this.newGroup, username: this.username, password: this.password });
       let value: string[] = [];      
       Object.assign(this.messages, {[this.newGroup]: value});
       this.newGroup = '';
@@ -199,6 +226,14 @@ export class ChatComponent implements OnInit {
   splitName(name: string): string {
     let roomName: string = name.replace(this.username, '');
     return(roomName);
+  }
+
+  checkSlide() {
+    console.log("slide: " + this.privateGroup);
+  }
+
+  togglePass() {
+    this.showPass = !this.showPass;
   }
 
   get isMemberOfActiveRoom() {

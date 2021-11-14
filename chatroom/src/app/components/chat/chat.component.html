@@ -10,8 +10,9 @@
             </ng-template>
             <mat-list class="conversations">
                 <mat-list-item *ngFor="let recipient of rooms" (click)="selectedConversation(recipient.name)" [ngClass]="isEvent(recipient.name)">
-                    <mat-icon matListIcon style="font-size: 15px;" *ngIf="recipient.isGroup">public</mat-icon>
+                    <mat-icon matListIcon style="font-size: 15px;" *ngIf="recipient.isGroup && !recipient.isPrivate">public</mat-icon>
                     <mat-icon matListIcon style="font-size: 15px;" *ngIf="!recipient.isGroup">whatsapp</mat-icon>
+                    <mat-icon matListIcon style="font-size: 15px;" *ngIf="recipient.isGroup && recipient.isPrivate">lock</mat-icon>
                     <mat-icon class="icon_display" *ngIf="recipient.notification">notifications</mat-icon>
                     <p *ngIf="recipient.isGroup">{{recipient.name}}</p>
                     <p *ngIf="!recipient.isGroup">{{splitName(recipient.name)}}</p>
@@ -36,18 +37,25 @@
     </mat-sidenav>
     <mat-sidenav position="end" mode="side" opened *ngIf="activeRoom">
       <mat-card>
+        <p class="title">Create a new group</p>
         <mat-tab-group>
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <input mat-input type="text" (keydown.space)="$event.preventDefault()" size="7" [(ngModel)]="newGroup">
+                    <input matInput mat-input type="text" placeholder="Group name" (keydown.space)="$event.preventDefault()" size="10" [(ngModel)]="newGroup" (keyup.enter)="createNewGroup()">
                     <button mat-icon-button matTooltip="Create a new group" (click)="createNewGroup()" [disabled]="newGroup === ''">
                         <mat-icon>person_add</mat-icon>
                     </button>
-                </ng-template>  
+                    <mat-slide-toggle matTooltip="Make group private" [(ngModel)]="privateGroup"></mat-slide-toggle>
+                    <input matInput style="margin-left: 10px;" [type]="showPass ? 'text' : 'password'" placeholder="Password" (keydown.space)="$event.preventDefault()" size="7" *ngIf="privateGroup" [(ngModel)]="password">
+                    <mat-icon matSuffix *ngIf="privateGroup && showPass" (click)="togglePass()">visibility</mat-icon>
+                    <mat-icon matSuffix *ngIf="privateGroup && !showPass" (click)="togglePass()">visibility_off</mat-icon>
+                </ng-template>
             </mat-tab>
         </mat-tab-group>
         
         <mat-list class="members">
+          <p class="title" *ngIf="activeRoom.isGroup">Users in group {{activeRoom.name}}</p>
+          <p class="title" *ngIf="!activeRoom.isGroup">Users in group {{splitName(activeRoom.name)}}</p>
             <mat-list-item *ngFor="let user of rooms[selectedRoom].users">
               <p>{{user}}</p>
             </mat-list-item>

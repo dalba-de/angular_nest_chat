@@ -51,7 +51,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('joinRoom')
-  handleJoinRoom(client: Socket, data: { room: string, username: string }) {
+  handleJoinRoom(client: Socket, data: { room: string, username: string, password: string }) {
     let users: string[] = [];
     if (!this.rooms.has(data.room)) {
         users.push(data.username);
@@ -65,7 +65,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
         console.log(this.rooms);
     }
     client.join(data.room);
-    this.wss.emit('joinedRoom', { room: data.room, users: users });
+    this.wss.emit('joinedRoom', { room: data.room, users: users, password: data.password });
   }
 
   @SubscribeMessage('userToUser')

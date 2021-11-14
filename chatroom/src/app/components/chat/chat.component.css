@@ -129,3 +129,9 @@ section .mat-list .mat-list-avatar{
 .message_row {
     background-color: #fff;
 }
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 1em;
+}
