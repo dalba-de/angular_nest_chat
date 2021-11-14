@@ -18,6 +18,11 @@
     justify-content: center;
     height: 100%;
 }
+
+.icon_display {
+    font-size: 15px;
+    color: red;
+}
  
 .conversation-header h2, .conversation-header p {
     align-items: center;
@@ -42,6 +47,10 @@
  
 .empty-conversation h1 {
     margin: 0;
+}
+
+.tabs {
+    background-color: blueviolet;
 }
  
 .conversations .mat-list-item {

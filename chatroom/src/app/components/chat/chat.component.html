@@ -2,17 +2,33 @@
     <mat-sidenav mode="side" opened>
       <mat-card>
         <mat-tab-group>
+          <!-- [selectedIndex]="1" -->
           <mat-tab>
             <ng-template mat-tab-label>
-              <mat-icon matListIcon>forum</mat-icon>
+              <mat-icon (click)="deleteNotification()" matListIcon>forum</mat-icon>
+              <mat-icon class="icon_display" *ngIf="notification">notifications</mat-icon>
             </ng-template>
             <mat-list class="conversations">
                 <mat-list-item *ngFor="let recipient of rooms" (click)="selectedConversation(recipient.name)" [ngClass]="isEvent(recipient.name)">
                     <mat-icon matListIcon>forum</mat-icon>
+                    <mat-icon class="icon_display" *ngIf="recipient.notification">notifications</mat-icon>
                     <p>{{recipient.name}}</p>
                 </mat-list-item>
+            </mat-list>           
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon matListIcon>people</mat-icon>
+            </ng-template>
+            <mat-list class="conversations">
+              <mat-list-item *ngFor="let user of users" (click)="userToUser(user)">
+                  <mat-icon matListIcon>person</mat-icon>
+                  <p>{{user}}</p>
+              </mat-list-item>
             </mat-list>
           </mat-tab>
+
         </mat-tab-group>
       </mat-card>
     </mat-sidenav>
@@ -73,8 +89,9 @@
       <div class="conversation-input">
         <mat-divider></mat-divider>
         <mat-form-field class="full-width">
-          <input matInput placeholder="Start chatting..." name="text" [(ngModel)]="text">
+          <input matInput placeholder="Start chatting..." (keyup.enter)="sendChatMessage()" name="text" [(ngModel)]="text">
           <mat-icon matSuffix (click)="sendChatMessage()">send</mat-icon>
+          <!-- <mat-icon matSuffix (click)="playAudio()">notifications</mat-icon> -->
         </mat-form-field>
       </div>
     </section>
