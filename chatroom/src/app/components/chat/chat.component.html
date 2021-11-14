@@ -13,7 +13,8 @@
                     <mat-icon matListIcon style="font-size: 15px;" *ngIf="recipient.isGroup">public</mat-icon>
                     <mat-icon matListIcon style="font-size: 15px;" *ngIf="!recipient.isGroup">whatsapp</mat-icon>
                     <mat-icon class="icon_display" *ngIf="recipient.notification">notifications</mat-icon>
-                    <p>{{recipient.name}}</p>
+                    <p *ngIf="recipient.isGroup">{{recipient.name}}</p>
+                    <p *ngIf="!recipient.isGroup">{{splitName(recipient.name)}}</p>
                 </mat-list-item>
             </mat-list>           
           </mat-tab>
@@ -58,10 +59,14 @@
     </section>  
     <section *ngIf="activeRoom">
       <div class="mat-typography conversation-header">
-        <h2>
+        <h2 *ngIf="activeRoom.isGroup">
             <mat-icon>forum</mat-icon>
               {{activeRoom.name}}
         </h2>
+        <h2 *ngIf="!activeRoom.isGroup">
+          <mat-icon>forum</mat-icon>
+            {{splitName(activeRoom.name)}}
+      </h2>
         <p>
             <mat-icon>account_circle</mat-icon>
             {{(activeRoom.users).length}} Members

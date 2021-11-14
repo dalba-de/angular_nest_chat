@@ -94,6 +94,7 @@ export class ChatComponent implements OnInit {
         notification: false,
         isGroup: false
       };
+      console.log(room.room)
       let value: string[] = [];      
       Object.assign(this.messages, {[room.room]: value});
       this.rooms.push(newRoom);
@@ -193,6 +194,11 @@ export class ChatComponent implements OnInit {
   deleteNotification() {
     this.notification = false;
     console.log(this.notification)
+  }
+
+  splitName(name: string): string {
+    let roomName: string = name.replace(this.username, '');
+    return(roomName);
   }
 
   get isMemberOfActiveRoom() {

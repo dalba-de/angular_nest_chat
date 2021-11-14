@@ -73,7 +73,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     let users: string[] = [];
     let id: string;
     let socketId: Socket;
-    let roomName: string = data.myUser + ' ' + data.username;
+    let roomName: string = data.myUser + data.username;
     console.log("roomName: " + roomName);
     for (const [key, value] of this.nicknames.entries()) {
       if (value === data.username) {
