@@ -1,0 +1,35 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<nav class="navbar navbar-light py-5" style="background-color: #344254;">
+  <label class="square">
+      <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/48014adb-982c-4a5c-ae09-a1afab53f3f3/ddrg6q2-92393626-c353-43db-9c70-85d869dd58d9.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzQ4MDE0YWRiLTk4MmMtNGE1Yy1hZTA5LWExYWZhYjUzZjNmM1wvZGRyZzZxMi05MjM5MzYyNi1jMzUzLTQzZGItOWM3MC04NWQ4NjlkZDU4ZDkucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.Vn1TEvEpOgKhNWdIPLDTOtLo-feiJ-mh-kYr1VfJFQY" class="avatar-icon">
+  </label>
+  <div class="rectangle">
+      <div class="name__description">
+          <p class="user__description" style="color: aliceblue; vertical-align: middle; line-height: 0px;">{{this.username}}</p>
+      </div>
+  </div>
+  <!-- <div (click)="navbar()">
+    <button mat-fab color="primary">
+      <span class="material-icons">home</span>
+    </button>
+  </div> -->
+
+</nav>
+
+<ul id="par" class="items" align="center">
+  <li id="pic3" (click)="navbar()" class="item">
+    <div  class="img__wrap">
+      <img
+        id="img3"
+        src="https://images-na.ssl-images-amazon.com/images/I/51PUY0b3KJL.png"
+        class="icon"
+      />
+      <div class="img__description_layer">
+          <p class="img__description">CHAT</p>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<router-outlet></router-outlet>

@@ -1,9 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatTabGroup } from '@angular/material/tabs'
 import { Rooms } from "../../rooms";
 import { Router } from '@angular/router';
+import { DataService } from "../../services/data.service";
 
 @Component({
   selector: 'app-chat',
@@ -28,10 +29,12 @@ export class ChatComponent implements OnInit {
   password: string = '';
   showPass: boolean = false;
 
-  constructor(private socket: Socket, private router: Router) { }
+  constructor(private socket: Socket, private router: Router, private dataservice: DataService) { }
 
   ngOnInit(): void {
-    this.username = prompt('username: ')!;
+    // this.username = prompt('username: ')!;
+    this.username = this.dataservice.getData();
+    console.log("" + this.username + " has arrived!!");
 
     this.socket.on('connect', () => {
       this.socket.emit('set-user', this.username);

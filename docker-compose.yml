@@ -17,19 +17,19 @@ services:
         ports: 
             - 3000:3000
 
-    # chatroom:
-    #     build:
-    #         dockerfile: Dockerfile
-    #         context: ./chatroom
-    #         target: development
-    #     command: npm run start
-    #     volumes: 
-    #         - ./chatroom:/dalba-de/chatroom/src/app
-    #         - /dalba-de/chatroom/src/app/node_modules
-    #     ports: 
-    #         - 4200:4200
-    #     links:
-    #         - api
+    chatroom:
+        build:
+            dockerfile: Dockerfile
+            context: ./chatroom
+            target: development
+        command: npm run start
+        volumes: 
+            - ./chatroom:/dalba-de/chatroom/src/app
+            - /dalba-de/chatroom/src/app/node_modules
+        ports: 
+            - 4200:4200
+        links:
+            - api
 
     postgres:
         image: postgres:10.4

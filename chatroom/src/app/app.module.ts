@@ -33,15 +33,21 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 import { ChildComponent } from './components/child/child.component';
+import { ShellComponent } from './components/shell/shell.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 const routes: Routes = [
-    { path: '', redirectTo: 'chat', pathMatch: 'full' },
-    { path: 'chat', component: ChatComponent },
+    { path: '', redirectTo: 'shell', pathMatch: 'full' },    
     { path: 'chatroom', component: ChatroomComponent },
-    { path: 'pruebas', component: PruebasComponent }
+    { path: 'pruebas', component: PruebasComponent },
+    { 
+      path: '', component: ShellComponent,
+      children: [
+        { path: 'chat', component: ChatComponent }
+      ]
+    }
 ]
 
 @NgModule({
@@ -49,7 +55,8 @@ const routes: Routes = [
     AppComponent,
     ChatComponent,
     PruebasComponent,
-    ChildComponent
+    ChildComponent,
+    ShellComponent
   ],
   imports: [
     BrowserModule,
