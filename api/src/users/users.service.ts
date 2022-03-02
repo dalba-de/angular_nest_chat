@@ -6,9 +6,14 @@ import { CreateUserDto } from "./create-user.dto";
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectRepository(users) private usersRepository: Repository<users>) {}
+    constructor(@InjectRepository(users)
+    private usersRepository: Repository<users>) {}
 
-    async create(user: CreateUserDto): Promise<users> {
+    async create(user: users): Promise<users> {
         return await this.usersRepository.save(user);
+    }
+
+    async readAll(): Promise<users[]> {
+        return await this.usersRepository.find();
     }
 }

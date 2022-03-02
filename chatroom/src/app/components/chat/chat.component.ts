@@ -5,6 +5,8 @@ import { MatTabGroup } from '@angular/material/tabs'
 import { Rooms } from "../../rooms";
 import { Router } from '@angular/router';
 import { DataService } from "../../services/data.service";
+import { ApiService } from 'src/app/services/api.service';
+import User from './user';
 
 @Component({
   selector: 'app-chat',
@@ -29,14 +31,33 @@ export class ChatComponent implements OnInit {
   password: string = '';
   showPass: boolean = false;
 
-  constructor(private socket: Socket, private router: Router, private dataservice: DataService) { }
+  newUser: any = {};
+  errorMsg: string = '';
+  allUsers: any = [];
+
+  constructor(private socket: Socket, private router: Router, private dataservice: DataService,
+    private apiService: ApiService) { }
 
   ngOnInit(): void {
     // this.username = prompt('username: ')!;
     this.username = this.dataservice.getData();
     console.log("" + this.username + " has arrived!!");
 
+    this.apiService.getUsers().subscribe((result) => {
+      this.allUsers = result;
+      console.log(this.allUsers);
+    });
+
     this.socket.on('connect', () => {
+      this.newUser.name = this.username;
+
+      this.apiService.createUser(this.newUser).subscribe(
+        res => console.log('HTTP response', res),
+        err => {
+          this.errorMsg = err.error.message;
+          window.alert(this.errorMsg);
+        },
+      )
       this.socket.emit('set-user', this.username);
       this.socket.emit('joinRoom', { room: 'General', username: this.username, password: this.password });
       let value: string[] = [];

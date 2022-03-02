@@ -5,6 +5,7 @@ import { FormsModule }   from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouteReuseStrategy } from '@angular/router';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppComponent } from './app.component';
 import { ChatroomComponent } from './components/chatroom/chatroom.component';
@@ -62,6 +63,7 @@ const routes: Routes = [
     BrowserModule,
     IonicModule.forRoot(),
     FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
     SocketIoModule.forRoot(config),

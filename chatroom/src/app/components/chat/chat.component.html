@@ -25,7 +25,7 @@
               <mat-icon matListIcon>people</mat-icon>
             </ng-template>
             <mat-list class="conversations">
-              <mat-list-item *ngFor="let user of users" (click)="userToUser(user)">
+              <mat-list-item *ngFor="let user of allUsers" (click)="userToUser(user)">
                   <mat-icon matListIcon style="font-size: 15px;">person</mat-icon>
                   <p>{{user}}</p>
               </mat-list-item>
