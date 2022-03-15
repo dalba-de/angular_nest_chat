@@ -1,4 +1,5 @@
 <mat-sidenav-container class="container">
+  <!-- Barra lateral correspondiente a grupos y personas -->
     <mat-sidenav mode="side" opened>
       <mat-card>
         <mat-tab-group>
@@ -8,7 +9,7 @@
               <mat-icon (click)="deleteNotification()" matListIcon>forum</mat-icon>
               <mat-icon class="icon_display" *ngIf="notification">notifications</mat-icon>
             </ng-template>
-            <mat-list class="conversations">
+            <!-- <mat-list class="conversations">
                 <mat-list-item *ngFor="let recipient of rooms" (click)="selectedConversation(recipient.name)" [ngClass]="isEvent(recipient.name)">
                     <mat-icon matListIcon style="font-size: 15px;" *ngIf="recipient.isGroup && !recipient.isPrivate">public</mat-icon>
                     <mat-icon matListIcon style="font-size: 15px;" *ngIf="!recipient.isGroup">whatsapp</mat-icon>
@@ -17,17 +18,26 @@
                     <p *ngIf="recipient.isGroup">{{recipient.name}}</p>
                     <p *ngIf="!recipient.isGroup">{{splitName(recipient.name)}}</p>
                 </mat-list-item>
-            </mat-list>           
+            </mat-list>            -->
+
+            <!-- Pestaña correspondiente a los grupos. Falta incluir chats individuales -->
+            <mat-list class="conversations">
+              <mat-list-item *ngFor="let group of allGroups">
+                <mat-icon matListIcon style="font-size: 15px;">public</mat-icon>
+                <p>{{group.name}}</p>
+              </mat-list-item>
+            </mat-list>
           </mat-tab>
 
+          <!-- Pestaña correspondiente a las personas en el chat -->
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon matListIcon>people</mat-icon>
             </ng-template>
             <mat-list class="conversations">
-              <mat-list-item *ngFor="let user of allUsers" (click)="userToUser(user)">
+              <mat-list-item *ngFor="let user of users" (click)="userToUser(user)">
                   <mat-icon matListIcon style="font-size: 15px;">person</mat-icon>
-                  <p>{{user.name}}</p>
+                  <p>{{user}}</p>
               </mat-list-item>
             </mat-list>
           </mat-tab>
@@ -35,7 +45,10 @@
         </mat-tab-group>
       </mat-card>
     </mat-sidenav>
-    <mat-sidenav position="end" mode="side" opened *ngIf="activeRoom">
+
+    <!-- Barra lateral correspondiente a las personas en cada grupo -->
+    <!-- <mat-sidenav position="end" mode="side" opened *ngIf="activeRoom"> -->
+    <mat-sidenav position="end" mode="side">  
       <mat-card>
         <p class="title">Create a new group</p>
         <mat-tab-group>

@@ -18,22 +18,25 @@ export class ChatComponent implements OnInit {
 
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
-  username: string = '';
+  // username: string = '';
   text: string = '';
   newGroup: string = '';
   messages: any = {}
   rooms : Rooms[] = []
   activeRoom: Rooms;
   selectedRoom : number = 0;
-  users: string[] = [];
+  // users: string[] = [];
   notification: boolean = false;
   privateGroup: boolean = false;
   password: string = '';
   showPass: boolean = false;
 
+  username: string = '';
   newUser: any = {};
   errorMsg: string = '';
   allUsers: any = [];
+  users: string[] = [];
+  allGroups: any = [];
 
   constructor(private socket: Socket, private router: Router, private dataservice: DataService,
     private apiService: ApiService) { }
@@ -45,7 +48,16 @@ export class ChatComponent implements OnInit {
 
     this.apiService.getUsers().subscribe((result) => {
       this.allUsers = result;
-      console.log(this.allUsers);
+      for (let i = 0; i < this.allUsers.length; i++) {
+        if (this.allUsers[i].name !== this.username)
+          this.users.push(this.allUsers[i].name);
+      }
+      console.log(this.users);
+    });
+
+    this.apiService.getGroups().subscribe((result) => {
+      this.allGroups = result;
+      console.log(this.allGroups);
     });
 
     this.socket.on('connect', () => {
@@ -58,10 +70,11 @@ export class ChatComponent implements OnInit {
           window.alert(this.errorMsg);
         },
       )
-      this.socket.emit('set-user', this.username);
-      this.socket.emit('joinRoom', { room: 'General', username: this.username, password: this.password });
-      let value: string[] = [];
-      Object.assign(this.messages, {General: value}); //Esta linea vale para añadir propiedades a un objeto
+      this.socket.emit('set-user');
+      this.socket.emit('joinRoom', {room: 'General'});
+      // this.socket.emit('joinRoom', { room: 'General', username: this.username, password: this.password });
+      // let value: string[] = [];
+      // Object.assign(this.messages, {General: value}); //Esta linea vale para añadir propiedades a un objeto
     });
 
     this.socket.on('chatToClient', (msg) => {
@@ -79,13 +92,27 @@ export class ChatComponent implements OnInit {
       this.receiveChatMessage(msg);
     });
 
-    this.socket.on('users', (newUser) => {
-      for (let i = 0; i < newUser.nicknames.length; i++) {
-        if (newUser.nicknames[i] !== this.username && (this.users.indexOf(newUser.nicknames[i]) === -1))
-          this.users.push(newUser.nicknames[i])
-      }
-      console.log(this.users)
-    })
+    // this.socket.on('users', (newUser) => {
+    //   for (let i = 0; i < newUser.nicknames.length; i++) {
+    //     if (newUser.nicknames[i] !== this.username && (this.users.indexOf(newUser.nicknames[i]) === -1))
+    //       this.users.push(newUser.nicknames[i])
+    //   }
+    //   console.log(this.users)
+    // })
+
+    this.socket.on('users', () => {
+      this.users = [];
+      this.apiService.getUsers().subscribe((result) => {
+        this.allUsers = result;
+        for (let i = 0; i < this.allUsers.length; i++) {
+          if (this.allUsers[i].name !== this.username)
+            this.users.push(this.allUsers[i].name);
+        }
+        console.log(this.users);
+      });
+    });
+
+    //CONTINUAR AQUI, HACER JOINEDROOM
 
     this.socket.on('joinedRoom', (room) => {
         for (let i = 0; i < this.rooms.length; i++) {

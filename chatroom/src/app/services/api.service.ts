@@ -18,4 +18,8 @@ export class ApiService {
   public getUsers() {
     return this.httpClient.get(`${this.API_SERVER}/users/`);
   }
+
+  public getGroups() {
+    return this.httpClient.get(`${this.API_SERVER}/groups/`);
+  }
 }

@@ -1,9 +1,13 @@
 import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { GroupsService } from "../groups/groups.service";
+import { CreateGroupDto } from "../groups/dto/create-group.dto";
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
+
+  constructor(private groupsService: GroupsService) {}
       
   @WebSocketServer() wss: Server;
 
@@ -32,16 +36,33 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
   }
 
   afterInit(server: any) {
+    let newGroup: CreateGroupDto;
+
+    newGroup = {
+      name: "General",
+      private: false
+    }
+    this.groupsService.create(newGroup);
     this.logger.log('Initialized!');
   }
 
   @SubscribeMessage('set-user')
-  setUser(client: Socket, nickname: string) {
-    this.nicknames.set(client.id, nickname);
-    // this.wss.emit('users-changed', {user: nickname, event: 'joined'});
-    this.users.push(nickname);
-    this.wss.emit('users', {nicknames: this.users});
+  setUser(client: Socket) {
+    this.wss.emit('users');
   }
+
+  @SubscribeMessage('joinRoom')
+  handleJoinRoom(client: Socket, data: {room: string}) {
+    this.wss.emit('joinedRoom', {room: data.room})
+  }
+
+  // @SubscribeMessage('set-user')
+  // setUser(client: Socket, nickname: string) {
+  //   this.nicknames.set(client.id, nickname);
+  //   // this.wss.emit('users-changed', {user: nickname, event: 'joined'});
+  //   this.users.push(nickname);
+  //   this.wss.emit('users', {nicknames: this.users});
+  // }
 
   @SubscribeMessage('chatToServer')
   handleMessage(client: Socket, message: { sender: string, room: string, message: string }) {
@@ -50,23 +71,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     this.wss.to(message.room).emit('chatToClient', {text: message.message, room: message.room, from: this.nicknames.get(client.id), created: new Date()});
   }
 
-  @SubscribeMessage('joinRoom')
-  handleJoinRoom(client: Socket, data: { room: string, username: string, password: string }) {
-    let users: string[] = [];
-    if (!this.rooms.has(data.room)) {
-        users.push(data.username);
-        this.rooms.set(data.room, users);
-        console.log(this.rooms);
-    }
-    else {
-        users = this.rooms.get(data.room);
-        users.push(data.username);
-        this.rooms.set(data.room, users);
-        console.log(this.rooms);
-    }
-    client.join(data.room);
-    this.wss.emit('joinedRoom', { room: data.room, users: users, password: data.password });
-  }
+  // @SubscribeMessage('joinRoom')
+  // handleJoinRoom(client: Socket, data: { room: string, username: string, password: string }) {
+  //   let users: string[] = [];
+  //   if (!this.rooms.has(data.room)) {
+  //       users.push(data.username);
+  //       this.rooms.set(data.room, users);
+  //       console.log(this.rooms);
+  //   }
+  //   else {
+  //       users = this.rooms.get(data.room);
+  //       users.push(data.username);
+  //       this.rooms.set(data.room, users);
+  //       console.log(this.rooms);
+  //   }
+  //   client.join(data.room);
+  //   this.wss.emit('joinedRoom', { room: data.room, users: users, password: data.password });
+  // }
 
   @SubscribeMessage('userToUser')
   handleUserToUser(client: Socket, data: { myUser: string, username: string }) {
